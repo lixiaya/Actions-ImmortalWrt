@@ -93,7 +93,7 @@ jobs:
       - name: 多线程编译 ImmortalWrt (Build ImmortalWrt multithreading)
         if: ${{inputs.multithreading == true}}
         working-directory: ImmortalWrt
-        run: make -j$(nproc) V=s
+        run: make -j$(nproc) V=s || make -j1 V=s
 
       - name: 单线程编译 ImmortalWrt (Build ImmortalWrt single thread)
         if: ${{inputs.multithreading == false}}
@@ -179,7 +179,7 @@ jobs:
       - name: 多线程编译 ImmortalWrt (Build ImmortalWrt multithreading)
         if: ${{inputs.multithreading == true}}
         working-directory: ImmortalWrt
-        run: make -j$(nproc) V=s
+        run: make -j$(nproc) V=s || make -j1 V=s
 
       - name: 单线程编译 ImmortalWrt (Build ImmortalWrt single thread)
         if: ${{inputs.multithreading == false}}
