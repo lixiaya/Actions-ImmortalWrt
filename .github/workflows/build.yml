@@ -73,10 +73,13 @@ jobs:
           set -x
           make defconfig
           echo '==== Kernel/BTF config after defconfig ===='
-          grep -E 'CONFIG_LINUX_6_12|CONFIG_KERNEL_DEBUG_INFO|CONFIG_KERNEL_DEBUG_INFO_BTF|CONFIG_KERNEL_BPF_SYSCALL|CONFIG_KERNEL_BPF_JIT|CONFIG_KERNEL_BPF|CONFIG_PACKAGE_kmod-sched-bpf|CONFIG_PACKAGE_kmod-bpf' .config || true
+          grep -E 'CONFIG_LINUX_6_12|CONFIG_KERNEL_DEBUG_INFO|CONFIG_KERNEL_DEBUG_INFO_BTF|CONFIG_KERNEL_BPF_SYSCALL|CONFIG_KERNEL_BPF_JIT|CONFIG_KERNEL_BPF|CONFIG_PACKAGE_kmod-sched-bpf|CONFIG_PACKAGE_kmod-bpf|CONFIG_PACKAGE_apk|CONFIG_PACKAGE_opkg|CONFIG_PACKAGE_daed|CONFIG_PACKAGE_luci-app-daed' .config || true
           grep -q '^CONFIG_LINUX_6_12=y$' .config || { echo 'CONFIG_LINUX_6_12 was not enabled after defconfig'; exit 1; }
           grep -q '^CONFIG_KERNEL_DEBUG_INFO_BTF=y$' .config || { echo 'CONFIG_KERNEL_DEBUG_INFO_BTF was not enabled after defconfig'; exit 1; }
           grep -q '^CONFIG_KERNEL_DEBUG_INFO=y$' .config || { echo 'CONFIG_KERNEL_DEBUG_INFO was not enabled after defconfig'; exit 1; }
+          grep -q '^CONFIG_PACKAGE_apk=y$' .config || { echo 'CONFIG_PACKAGE_apk was not enabled after defconfig'; exit 1; }
+          grep -q '^CONFIG_PACKAGE_daed=y$' .config || { echo 'CONFIG_PACKAGE_daed was not enabled after defconfig'; exit 1; }
+          grep -q '^CONFIG_PACKAGE_luci-app-daed=y$' .config || { echo 'CONFIG_PACKAGE_luci-app-daed was not enabled after defconfig'; exit 1; }
           grep -q '^CONFIG_KERNEL_BPF_SYSCALL=y$' .config || echo 'CONFIG_KERNEL_BPF_SYSCALL was not enabled after defconfig'
           grep -q '^CONFIG_KERNEL_BPF_JIT=y$' .config || echo 'CONFIG_KERNEL_BPF_JIT was not enabled after defconfig'
           pahole --version
@@ -148,10 +151,13 @@ jobs:
           set -x
           make defconfig
           echo '==== Kernel/BTF config after defconfig ===='
-          grep -E 'CONFIG_LINUX_6_12|CONFIG_KERNEL_DEBUG_INFO|CONFIG_KERNEL_DEBUG_INFO_BTF|CONFIG_KERNEL_BPF_SYSCALL|CONFIG_KERNEL_BPF_JIT|CONFIG_KERNEL_BPF|CONFIG_PACKAGE_kmod-sched-bpf|CONFIG_PACKAGE_kmod-bpf' .config || true
+          grep -E 'CONFIG_LINUX_6_12|CONFIG_KERNEL_DEBUG_INFO|CONFIG_KERNEL_DEBUG_INFO_BTF|CONFIG_KERNEL_BPF_SYSCALL|CONFIG_KERNEL_BPF_JIT|CONFIG_KERNEL_BPF|CONFIG_PACKAGE_kmod-sched-bpf|CONFIG_PACKAGE_kmod-bpf|CONFIG_PACKAGE_apk|CONFIG_PACKAGE_opkg|CONFIG_PACKAGE_daed|CONFIG_PACKAGE_luci-app-daed' .config || true
           grep -q '^CONFIG_LINUX_6_12=y$' .config || { echo 'CONFIG_LINUX_6_12 was not enabled after defconfig'; exit 1; }
           grep -q '^CONFIG_KERNEL_DEBUG_INFO_BTF=y$' .config || { echo 'CONFIG_KERNEL_DEBUG_INFO_BTF was not enabled after defconfig'; exit 1; }
           grep -q '^CONFIG_KERNEL_DEBUG_INFO=y$' .config || { echo 'CONFIG_KERNEL_DEBUG_INFO was not enabled after defconfig'; exit 1; }
+          grep -q '^CONFIG_PACKAGE_apk=y$' .config || { echo 'CONFIG_PACKAGE_apk was not enabled after defconfig'; exit 1; }
+          grep -q '^CONFIG_PACKAGE_daed=y$' .config || { echo 'CONFIG_PACKAGE_daed was not enabled after defconfig'; exit 1; }
+          grep -q '^CONFIG_PACKAGE_luci-app-daed=y$' .config || { echo 'CONFIG_PACKAGE_luci-app-daed was not enabled after defconfig'; exit 1; }
           grep -q '^CONFIG_KERNEL_BPF_SYSCALL=y$' .config || echo 'CONFIG_KERNEL_BPF_SYSCALL was not enabled after defconfig'
           grep -q '^CONFIG_KERNEL_BPF_JIT=y$' .config || echo 'CONFIG_KERNEL_BPF_JIT was not enabled after defconfig'
           pahole --version
