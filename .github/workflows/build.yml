@@ -71,11 +71,12 @@ jobs:
         working-directory: ImmortalWrt
         run: |
           make defconfig
-          grep -q '^CONFIG_LINUX_6_12=y$' .config
-          grep -q '^CONFIG_KERNEL_DEBUG_INFO_BTF=y$' .config
-          grep -q '^CONFIG_KERNEL_DEBUG_INFO=y$' .config
-          grep -q '^CONFIG_KERNEL_BPF_SYSCALL=y$' .config
-          grep -q '^CONFIG_KERNEL_BPF_JIT=y$' .config
+          grep -E 'CONFIG_LINUX_6_12|CONFIG_KERNEL_DEBUG_INFO|CONFIG_KERNEL_DEBUG_INFO_BTF|CONFIG_KERNEL_BPF_SYSCALL|CONFIG_KERNEL_BPF_JIT|CONFIG_KERNEL_BPF|CONFIG_PACKAGE_kmod-sched-bpf|CONFIG_PACKAGE_kmod-bpf' .config || true
+          grep -q '^CONFIG_LINUX_6_12=y$' .config || (echo 'CONFIG_LINUX_6_12 was not enabled after defconfig' && exit 1)
+          grep -q '^CONFIG_KERNEL_DEBUG_INFO_BTF=y$' .config || (echo 'CONFIG_KERNEL_DEBUG_INFO_BTF was not enabled after defconfig' && exit 1)
+          grep -q '^CONFIG_KERNEL_DEBUG_INFO=y$' .config || (echo 'CONFIG_KERNEL_DEBUG_INFO was not enabled after defconfig' && exit 1)
+          grep -q '^CONFIG_KERNEL_BPF_SYSCALL=y$' .config || (echo 'CONFIG_KERNEL_BPF_SYSCALL was not enabled after defconfig' && exit 1)
+          grep -q '^CONFIG_KERNEL_BPF_JIT=y$' .config || (echo 'CONFIG_KERNEL_BPF_JIT was not enabled after defconfig' && exit 1)
           pahole --version
 
       - name: 编译前上传配置 (Upload config before build)
@@ -142,11 +143,12 @@ jobs:
         working-directory: ImmortalWrt
         run: |
           make defconfig
-          grep -q '^CONFIG_LINUX_6_12=y$' .config
-          grep -q '^CONFIG_KERNEL_DEBUG_INFO_BTF=y$' .config
-          grep -q '^CONFIG_KERNEL_DEBUG_INFO=y$' .config
-          grep -q '^CONFIG_KERNEL_BPF_SYSCALL=y$' .config
-          grep -q '^CONFIG_KERNEL_BPF_JIT=y$' .config
+          grep -E 'CONFIG_LINUX_6_12|CONFIG_KERNEL_DEBUG_INFO|CONFIG_KERNEL_DEBUG_INFO_BTF|CONFIG_KERNEL_BPF_SYSCALL|CONFIG_KERNEL_BPF_JIT|CONFIG_KERNEL_BPF|CONFIG_PACKAGE_kmod-sched-bpf|CONFIG_PACKAGE_kmod-bpf' .config || true
+          grep -q '^CONFIG_LINUX_6_12=y$' .config || (echo 'CONFIG_LINUX_6_12 was not enabled after defconfig' && exit 1)
+          grep -q '^CONFIG_KERNEL_DEBUG_INFO_BTF=y$' .config || (echo 'CONFIG_KERNEL_DEBUG_INFO_BTF was not enabled after defconfig' && exit 1)
+          grep -q '^CONFIG_KERNEL_DEBUG_INFO=y$' .config || (echo 'CONFIG_KERNEL_DEBUG_INFO was not enabled after defconfig' && exit 1)
+          grep -q '^CONFIG_KERNEL_BPF_SYSCALL=y$' .config || (echo 'CONFIG_KERNEL_BPF_SYSCALL was not enabled after defconfig' && exit 1)
+          grep -q '^CONFIG_KERNEL_BPF_JIT=y$' .config || (echo 'CONFIG_KERNEL_BPF_JIT was not enabled after defconfig' && exit 1)
           pahole --version
 
       - name: 开启 SSH 服务 (Start SSH service)
