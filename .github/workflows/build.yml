@@ -119,8 +119,36 @@ jobs:
           ref: ${{inputs.branch}}
           path: ImmortalWrt
 
+      - name: 复制当前仓库的配置文件到 ImmortalWrt 仓库  (Copy current repo config to ImmortalWrt repo)
+        run: cp -f .config feeds.conf.default diy.sh ImmortalWrt/
+
+      - name: 运行 diy.sh (Run diy.sh)
+        working-directory: ImmortalWrt
+        run: |
+          chmod +x diy.sh
+          ./diy.sh
+
+      - name: 更新并下载 feeds (Update and download feeds)
+        working-directory: ImmortalWrt
+        run: ./scripts/feeds update -a && ./scripts/feeds install -a
+
+      - name: 再次复制当前仓库的配置文件到 ImmortalWrt 仓库 (Copy current repo config to ImmortalWrt repo again)
+        run: cp -f .config feeds.conf.default diy.sh ImmortalWrt/
+
+      - name: 生成完整配置并检查 BTF (Generate full config and check BTF)
+        working-directory: ImmortalWrt
+        run: |
+          make defconfig
+          grep -q '^CONFIG_LINUX_6_12=y$' .config
+          grep -q '^CONFIG_KERNEL_DEBUG_INFO_BTF=y$' .config
+          grep -q '^CONFIG_KERNEL_DEBUG_INFO=y$' .config
+          grep -q '^CONFIG_KERNEL_BPF_SYSCALL=y$' .config
+          grep -q '^CONFIG_KERNEL_BPF_JIT=y$' .config
+          pahole --version
+
       - name: 开启 SSH 服务 (Start SSH service)
         uses: lhotari/action-upterm@v1
+        continue-on-error: true
         with:
           wait-timeout-minutes: 20
 
