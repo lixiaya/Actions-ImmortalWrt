@@ -54,15 +54,17 @@ jobs:
       - name: 复制当前仓库的配置文件到 ImmortalWrt 仓库  (Copy current repo config to ImmortalWrt repo)
         run: cp -f .config feeds.conf.default diy.sh ImmortalWrt/
 
-      - name: 运行 diy.sh (Run diy.sh)
-        working-directory: ImmortalWrt
-        run: |
-          chmod +x diy.sh
-          ./diy.sh
-
       - name: 更新并下载 feeds (Update and download feeds)
         working-directory: ImmortalWrt
         run: ./scripts/feeds update -a && ./scripts/feeds install -a
+
+      - name: 修复 mac80211 allnoconfig 问题 (Fix mac80211 allnoconfig issue)
+        working-directory: ImmortalWrt
+        run: |
+          # 删除有问题的 patch，该 patch 将 allnoconfig 改为纯全关闭模式
+          # 导致 backport/autoconf.h 无法生成，mt76 编译失败
+          rm -f package/kernel/mac80211/patches/build/002-change_allconfig.patch
+          echo "Removed 002-change_allconfig.patch"
 
       - name: 再次复制当前仓库的配置文件到 ImmortalWrt 仓库 (Copy current repo config to ImmortalWrt repo again)
         run: cp -f .config feeds.conf.default diy.sh ImmortalWrt/
@@ -136,15 +138,17 @@ jobs:
       - name: 复制当前仓库的配置文件到 ImmortalWrt 仓库  (Copy current repo config to ImmortalWrt repo)
         run: cp -f .config feeds.conf.default diy.sh ImmortalWrt/
 
-      - name: 运行 diy.sh (Run diy.sh)
-        working-directory: ImmortalWrt
-        run: |
-          chmod +x diy.sh
-          ./diy.sh
-
       - name: 更新并下载 feeds (Update and download feeds)
         working-directory: ImmortalWrt
         run: ./scripts/feeds update -a && ./scripts/feeds install -a
+
+      - name: 修复 mac80211 allnoconfig 问题 (Fix mac80211 allnoconfig issue)
+        working-directory: ImmortalWrt
+        run: |
+          # 删除有问题的 patch，该 patch 将 allnoconfig 改为纯全关闭模式
+          # 导致 backport/autoconf.h 无法生成，mt76 编译失败
+          rm -f package/kernel/mac80211/patches/build/002-change_allconfig.patch
+          echo "Removed 002-change_allconfig.patch"
 
       - name: 再次复制当前仓库的配置文件到 ImmortalWrt 仓库 (Copy current repo config to ImmortalWrt repo again)
         run: cp -f .config feeds.conf.default diy.sh ImmortalWrt/
