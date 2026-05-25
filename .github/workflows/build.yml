@@ -93,11 +93,9 @@ jobs:
             ImmortalWrt/feeds.conf.default
             ImmortalWrt/.config
 
-      - name: 构建 host 工具链 (Build host tools and toolchain)
+      - name: 下载编译 (Download build)
         working-directory: ImmortalWrt
-        run: |
-          make tools/install -j$(nproc) V=s
-          make toolchain/install -j$(nproc) V=s
+        run: make download -j$(nproc)
 
       - name: 多线程编译 ImmortalWrt (Build ImmortalWrt multithreading)
         if: ${{inputs.multithreading == true}}
@@ -188,11 +186,9 @@ jobs:
             ImmortalWrt/feeds.conf.default
             ImmortalWrt/.config
 
-      - name: 构建 host 工具链 (Build host tools and toolchain)
+      - name: 下载编译 (Download build)
         working-directory: ImmortalWrt
-        run: |
-          make tools/install -j$(nproc) V=s
-          make toolchain/install -j$(nproc) V=s
+        run: make download -j$(nproc)
 
       - name: 多线程编译 ImmortalWrt (Build ImmortalWrt multithreading)
         if: ${{inputs.multithreading == true}}
