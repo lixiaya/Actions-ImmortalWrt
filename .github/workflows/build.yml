@@ -93,10 +93,14 @@ jobs:
             ImmortalWrt/feeds.conf.default
             ImmortalWrt/.config
 
+      - name: 预编译 mac80211 (Build mac80211 first)
+        working-directory: ImmortalWrt
+        run: make package/kernel/mac80211/compile V=s
+
       - name: 多线程编译 ImmortalWrt (Build ImmortalWrt multithreading)
         if: ${{inputs.multithreading == true}}
         working-directory: ImmortalWrt
-        run: make -j$(nproc) V=s || make -j1 V=s
+        run: make -j$(nproc) V=s || (make package/kernel/mt76/clean package/kernel/mac80211/clean V=s && make -j1 V=s)
 
       - name: 单线程编译 ImmortalWrt (Build ImmortalWrt single thread)
         if: ${{inputs.multithreading == false}}
@@ -182,10 +186,14 @@ jobs:
             ImmortalWrt/feeds.conf.default
             ImmortalWrt/.config
 
+      - name: 预编译 mac80211 (Build mac80211 first)
+        working-directory: ImmortalWrt
+        run: make package/kernel/mac80211/compile V=s
+
       - name: 多线程编译 ImmortalWrt (Build ImmortalWrt multithreading)
         if: ${{inputs.multithreading == true}}
         working-directory: ImmortalWrt
-        run: make -j$(nproc) V=s || make -j1 V=s
+        run: make -j$(nproc) V=s || (make package/kernel/mt76/clean package/kernel/mac80211/clean V=s && make -j1 V=s)
 
       - name: 单线程编译 ImmortalWrt (Build ImmortalWrt single thread)
         if: ${{inputs.multithreading == false}}
