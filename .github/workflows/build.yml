@@ -77,10 +77,16 @@ jobs:
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
-      - name: 再次复制 .config (Re-copy .config to override feed defaults)
-        run: cp -f .config ImmortalWrt/
+      - name: 展开配置并上传 (Run defconfig and upload)
+        working-directory: ImmortalWrt
+        run: |
+          cp -f ../.config .
+          make defconfig
+          echo '==== defconfig 完成，当前配置摘要 ===='
+          grep -E 'CONFIG_LINUX_6_12|CONFIG_TARGET_BOARD|CONFIG_TARGET_PROFILE|CONFIG_KERNEL_DEBUG_INFO_BTF|CONFIG_PACKAGE_apk|CONFIG_PACKAGE_daed' .config || true
 
       - name: 编译前上传配置 (Upload config before build)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: config-before-build
@@ -160,11 +166,18 @@ jobs:
           chmod +x diy.sh
           ./diy.sh
 
+      - name: 更新并下载 feeds (Update feeds)
+        working-directory: ImmortalWrt
+        run: |
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+
       - name: 开启 SSH 服务 (Setup SSH)
         uses: mxschmitt/action-tmate@v3
         timeout-minutes: 360
 
-      - name: 编译前上传配置 (Upload config)
+      - name: 编译前上传配置 (Upload config before build)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: config-before-build
