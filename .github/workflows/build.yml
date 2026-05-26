@@ -222,6 +222,18 @@ jobs:
             ImmortalWrt/feeds.conf.default
             ImmortalWrt/.config
 
+      - name: 下载源码 (Download sources)
+        working-directory: ImmortalWrt
+        run: make download -j$(nproc)
+
+      - name: 编译 tools (Build tools)
+        working-directory: ImmortalWrt
+        run: make tools/install -j$(nproc) V=s
+
+      - name: 编译 toolchain (Build toolchain)
+        working-directory: ImmortalWrt
+        run: make toolchain/install -j$(nproc) V=s
+
       - name: 准备内核源码 (Prepare kernel source)
         working-directory: ImmortalWrt
         run: make target/linux/prepare V=s
@@ -362,6 +374,14 @@ jobs:
       - name: 下载编译 (Download build)
         working-directory: ImmortalWrt
         run: make download -j$(nproc)
+
+      - name: 编译 tools (Build tools)
+        working-directory: ImmortalWrt
+        run: make tools/install -j$(nproc) V=s
+
+      - name: 编译 toolchain (Build toolchain)
+        working-directory: ImmortalWrt
+        run: make toolchain/install -j$(nproc) V=s
 
       - name: 修复 host 工具缺失 (Fix missing host tools)
         working-directory: ImmortalWrt
