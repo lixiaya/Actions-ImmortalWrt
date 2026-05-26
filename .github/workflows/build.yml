@@ -221,6 +221,17 @@ jobs:
         working-directory: ImmortalWrt
         run: make download -j$(nproc)
 
+      - name: 修复 host 工具缺失 (Fix missing host tools)
+        working-directory: ImmortalWrt
+        run: |
+          mkdir -p staging_dir/host/bin
+          # lua host 编译需要 sed 在 staging_dir/host/bin/sed
+          ln -sf $(which sed) staging_dir/host/bin/sed 2>/dev/null || true
+          ln -sf $(which awk) staging_dir/host/bin/awk 2>/dev/null || true
+          ln -sf $(which grep) staging_dir/host/bin/grep 2>/dev/null || true
+          echo "=== host tools check ==="
+          ls -la staging_dir/host/bin/ || true
+
       - name: 准备内核源码 (Prepare kernel source)
         working-directory: ImmortalWrt
         run: make target/linux/prepare V=s
