@@ -45,6 +45,22 @@ jobs:
     runs-on: ubuntu-latest
     name: ⚡ 快速验证 (Quick Test - stop at mt76)
     steps:
+      - name: 🔧 恢复 ccache 缓存 (Restore ccache)
+        uses: actions/cache@v4
+        with:
+          path: ~/.ccache
+          key: ccache-${{ runner.os }}-${{ hashFiles('ImmortalWrt/.config', 'ImmortalWrt/feeds.conf.default') }}
+          restore-keys: ccache-${{ runner.os }}-
+
+      - name: 🔧 恢复编译缓存 (Restore build cache)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ImmortalWrt/build_dir
+            ImmortalWrt/staging_dir
+          key: build-${{ runner.os }}-${{ hashFiles('ImmortalWrt/.config', 'ImmortalWrt/feeds.conf.default') }}
+          restore-keys: build-${{ runner.os }}-
+
       - name: 下载编译所需的依赖 (Install deps)
         run: |
           sudo apt update
@@ -126,6 +142,15 @@ jobs:
           path: ~/.ccache
           key: ccache-${{ runner.os }}-${{ hashFiles('ImmortalWrt/.config', 'ImmortalWrt/feeds.conf.default') }}
           restore-keys: ccache-${{ runner.os }}-
+
+      - name: 🔧 恢复编译缓存 (Restore build cache)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ImmortalWrt/build_dir
+            ImmortalWrt/staging_dir
+          key: build-${{ runner.os }}-${{ hashFiles('ImmortalWrt/.config', 'ImmortalWrt/feeds.conf.default') }}
+          restore-keys: build-${{ runner.os }}-
 
       - name: 下载编译所需的依赖 (Install the software packages required for compilation)
         run: |
@@ -230,6 +255,15 @@ jobs:
           path: ~/.ccache
           key: ccache-${{ runner.os }}-${{ hashFiles('ImmortalWrt/.config', 'ImmortalWrt/feeds.conf.default') }}
           restore-keys: ccache-${{ runner.os }}-
+
+      - name: 🔧 恢复编译缓存 (Restore build cache)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ImmortalWrt/build_dir
+            ImmortalWrt/staging_dir
+          key: build-${{ runner.os }}-${{ hashFiles('ImmortalWrt/.config', 'ImmortalWrt/feeds.conf.default') }}
+          restore-keys: build-${{ runner.os }}-
 
       - name: 下载编译所需的依赖 (Install the software packages required for compilation)
         run: |
