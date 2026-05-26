@@ -92,6 +92,10 @@ jobs:
         working-directory: ImmortalWrt
         run: make toolchain/install -j$(nproc) V=s
 
+      - name: 准备内核源码 (Prepare kernel source)
+        working-directory: ImmortalWrt
+        run: make target/linux/prepare V=s
+
       - name: 编译 mac80211 (Build mac80211)
         working-directory: ImmortalWrt
         run: make package/kernel/mac80211/compile V=s
