@@ -43,7 +43,7 @@ jobs:
             patch pkgconf python3 python3-pyelftools python3-setuptools \
             qemu-utils rsync scons squashfs-tools subversion swig texinfo \
             uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev \
-            pahole dwarves libbpf-dev clang llvm bpftool linux-tools-common
+            pahole dwarves libbpf-dev clang llvm linux-tools-common
 
       - name: 设置 ccache (Setup ccache)
         uses: hendrikmuhs/ccache-action@v1.2
@@ -131,7 +131,7 @@ jobs:
             patch pkgconf python3 python3-pyelftools python3-setuptools \
             qemu-utils rsync scons squashfs-tools subversion swig texinfo \
             uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev \
-            pahole dwarves libbpf-dev clang llvm bpftool linux-tools-common
+            pahole dwarves libbpf-dev clang llvm linux-tools-common
 
       - name: 设置 ccache (Setup ccache)
         uses: hendrikmuhs/ccache-action@v1.2
