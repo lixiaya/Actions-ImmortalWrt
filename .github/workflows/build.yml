@@ -111,6 +111,13 @@ jobs:
     runs-on: ubuntu-latest
     name: 🚀 编译 (Build)
     steps:
+      - name: 🔧 恢复 ccache 缓存 (Restore ccache)
+        uses: actions/cache@v4
+        with:
+          path: ~/.ccache
+          key: ccache-${{ runner.os }}-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-
+
       - name: 下载编译所需的依赖 (Install the software packages required for compilation)
         run: |
           sudo apt update
@@ -195,6 +202,13 @@ jobs:
     name: 🚀 编译 (Build) - SSH
     runs-on: ubuntu-latest
     steps:
+      - name: 🔧 恢复 ccache 缓存 (Restore ccache)
+        uses: actions/cache@v4
+        with:
+          path: ~/.ccache
+          key: ccache-${{ runner.os }}-${{ github.sha }}
+          restore-keys: ccache-${{ runner.os }}-
+
       - name: 下载编译所需的依赖 (Install the software packages required for compilation)
         run: |
           sudo apt update
