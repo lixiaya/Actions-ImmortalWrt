@@ -112,17 +112,21 @@ jobs:
         working-directory: ImmortalWrt
         run: make target/linux/prepare V=s
 
-      - name: 编译 mac80211 (Build mac80211)
+      - name: 编译并安装 mac80211 (Build & install mac80211)
         working-directory: ImmortalWrt
-        run: make package/kernel/mac80211/compile V=s
+        run: |
+          make package/kernel/mac80211/compile V=s
+          make package/kernel/mac80211/install V=s
 
       - name: 检查 autoconf.h 是否存在 (Check autoconf.h)
         working-directory: ImmortalWrt
         run: |
-          echo "=== Checking autoconf.h ==="
-          find build_dir -name "autoconf.h" 2>/dev/null || echo "autoconf.h NOT FOUND"
-          find staging_dir -name "autoconf.h" 2>/dev/null || echo "autoconf.h NOT FOUND in staging_dir"
-          ls -la build_dir/target-*/linux-*/mac80211-*/backports-*/include/backport/ 2>/dev/null || echo "backport/include/backport/ not found"
+          echo "=== Checking autoconf.h in build_dir ==="
+          find build_dir -name "autoconf.h" 2>/dev/null | head -5 || echo "autoconf.h NOT FOUND in build_dir"
+          echo "=== Checking autoconf.h in staging_dir ==="
+          find staging_dir -name "autoconf.h" 2>/dev/null | head -5 || echo "autoconf.h NOT FOUND in staging_dir"
+          echo "=== Checking mac80211-backport ==="
+          ls -la staging_dir/target-*/usr/include/mac80211-backport/backport/ 2>/dev/null || echo "mac80211-backport not found"
 
       - name: 编译 mt76 (Build mt76)
         working-directory: ImmortalWrt
@@ -217,6 +221,23 @@ jobs:
         working-directory: ImmortalWrt
         run: make download -j$(nproc)
 
+      - name: 准备内核源码 (Prepare kernel source)
+        working-directory: ImmortalWrt
+        run: make target/linux/prepare V=s
+
+      - name: 编译并安装 mac80211 (Build & install mac80211)
+        working-directory: ImmortalWrt
+        run: |
+          make package/kernel/mac80211/compile V=s
+          make package/kernel/mac80211/install V=s
+
+      - name: 检查 backport 头文件 (Check backport headers)
+        working-directory: ImmortalWrt
+        run: |
+          echo "=== Checking backport headers ==="
+          ls -la staging_dir/target-*/usr/include/mac80211-backport/backport/ 2>/dev/null || echo "mac80211-backport not found"
+          find staging_dir -name "autoconf.h" 2>/dev/null | head -5 || echo "autoconf.h NOT FOUND"
+
       - name: 多线程编译 ImmortalWrt (Build ImmortalWrt multithreading)
         if: ${{inputs.multithreading == true}}
         working-directory: ImmortalWrt
@@ -233,11 +254,6 @@ jobs:
           name: ImmortalWrt-build-result
           path: ImmortalWrt/bin/targets
 
-      - name: 显示 ccache 统计 (Show ccache statistics)
-        run: |
-          ccache -s
-          echo "=== ccache directory ==="
-          du -sh ~/.ccache || true
       - name: 显示 ccache 统计 (Show ccache statistics)
         run: |
           ccache -s
