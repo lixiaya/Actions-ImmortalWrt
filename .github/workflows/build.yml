@@ -31,8 +31,9 @@ jobs:
 
       - name: 下载编译所需的依赖 (Install build dependencies including eBPF/BTF toolchain)
         run: |
+          export DEBIAN_FRONTEND=noninteractive
           sudo apt update
-          sudo apt install -y \
+          sudo apt install -y --no-install-recommends \
             ack antlr3 asciidoc autoconf automake autopoint binutils bison \
             build-essential bzip2 ccache cmake cpio curl device-tree-compiler \
             fastjar flex gawk gettext gcc-multilib g++-multilib git gperf \
@@ -119,8 +120,9 @@ jobs:
 
       - name: 下载编译所需的依赖 (Install build dependencies including eBPF/BTF toolchain)
         run: |
+          export DEBIAN_FRONTEND=noninteractive
           sudo apt update
-          sudo apt install -y \
+          sudo apt install -y --no-install-recommends \
             ack antlr3 asciidoc autoconf automake autopoint binutils bison \
             build-essential bzip2 ccache cmake cpio curl device-tree-compiler \
             fastjar flex gawk gettext gcc-multilib g++-multilib git gperf \
