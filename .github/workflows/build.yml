@@ -112,6 +112,18 @@ jobs:
         working-directory: ImmortalWrt
         run: make target/linux/prepare V=s
 
+      - name: 修复 host 工具缺失 (Fix missing host tools)
+        working-directory: ImmortalWrt
+        run: |
+          set -x
+          mkdir -p staging_dir/host/bin
+          SED_PATH=$(command -v sed || echo /usr/bin/sed)
+          echo "SED_PATH=$SED_PATH"
+          ln -sf "$SED_PATH" staging_dir/host/bin/sed
+          echo "=== host tools check ==="
+          ls -la staging_dir/host/bin/sed
+          staging_dir/host/bin/sed --version 2>&1 | head -1 || echo "sed works"
+
       - name: 编译并安装 mac80211 (Build & install mac80211)
         working-directory: ImmortalWrt
         run: |
@@ -217,22 +229,26 @@ jobs:
             ImmortalWrt/feeds.conf.default
             ImmortalWrt/.config
 
-      - name: 下载编译 (Download build)
+      - name: 准备内核源码 (Prepare kernel source)
         working-directory: ImmortalWrt
-        run: make download -j$(nproc)
+        run: make target/linux/prepare V=s
 
       - name: 修复 host 工具缺失 (Fix missing host tools)
         working-directory: ImmortalWrt
         run: |
+          set -x
           mkdir -p staging_dir/host/bin
-          # lua host 编译需要 sed 在 staging_dir/host/bin/sed
-          ln -sf $(which sed) staging_dir/host/bin/sed 2>/dev/null || true
-          ln -sf $(which awk) staging_dir/host/bin/awk 2>/dev/null || true
-          ln -sf $(which grep) staging_dir/host/bin/grep 2>/dev/null || true
+          # 使用 command -v 而不是 which（更可靠）
+          SED_PATH=$(command -v sed || echo /usr/bin/sed)
+          echo "SED_PATH=$SED_PATH"
+          ln -sf "$SED_PATH" staging_dir/host/bin/sed
+          # 验证 symlink 是否创建成功
           echo "=== host tools check ==="
-          ls -la staging_dir/host/bin/ || true
+          ls -la staging_dir/host/bin/sed
+          file staging_dir/host/bin/sed
+          staging_dir/host/bin/sed --version 2>&1 | head -1 || echo "sed works"
 
-      - name: 准备内核源码 (Prepare kernel source)
+      - name: 编译并安装 mac80211 (Build & install mac80211)
         working-directory: ImmortalWrt
         run: make target/linux/prepare V=s
 
@@ -367,6 +383,18 @@ jobs:
       - name: 下载编译 (Download build)
         working-directory: ImmortalWrt
         run: make download -j$(nproc)
+
+      - name: 修复 host 工具缺失 (Fix missing host tools)
+        working-directory: ImmortalWrt
+        run: |
+          set -x
+          mkdir -p staging_dir/host/bin
+          SED_PATH=$(command -v sed || echo /usr/bin/sed)
+          echo "SED_PATH=$SED_PATH"
+          ln -sf "$SED_PATH" staging_dir/host/bin/sed
+          echo "=== host tools check ==="
+          ls -la staging_dir/host/bin/sed
+          staging_dir/host/bin/sed --version 2>&1 | head -1 || echo "sed works"
 
       - name: 多线程编译 ImmortalWrt (Build ImmortalWrt multithreading)
         if: ${{inputs.multithreading == true}}
