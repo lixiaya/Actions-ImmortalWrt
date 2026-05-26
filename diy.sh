@@ -1,5 +1,6 @@
 # 请在下方输入自定义命令(一般用来安装第三方插件)(可以留空)
 # Please enter the custom command below (usually used to install third-party plugins) (can be left blank)
 
-# dae/daed eBPF 透明代理
-git clone --depth=1 https://github.com/daeuniverse/dae-openwrt.git package/dae-openwrt
+# dae/daed 已包含在 ImmortalWrt 官方 packages feed 中，无需额外克隆
+# 如需自定义命令在此添加（如安装第三方插件）
+# git clone --depth=1 https://github.com/xxx/xxx.git package/xxx
