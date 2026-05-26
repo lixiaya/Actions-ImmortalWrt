@@ -26,11 +26,86 @@ on:
         description: "使用 ssh 连接到编译环境 (Connect to the build environment using ssh)"
         type: boolean
         default: false
+      quick_test:
+        description: "快速验证：只编译到 mt76 就停 (Quick test: stop after mt76)"
+        type: boolean
+        default: false
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  quick-test:
+    if: ${{inputs.quick_test == true}}
+    runs-on: ubuntu-latest
+    name: ⚡ 快速验证 (Quick Test - stop at mt76)
+    steps:
+      - name: 下载编译所需的依赖 (Install deps)
+        run: |
+          sudo apt update
+          sudo apt install -y ccache
+
+      - name: 克隆当前仓库 (Clone current repo)
+        uses: actions/checkout@v4
+
+      - name: 克隆 ImmortalWrt 仓库 (Clone ImmortalWrt repo)
+        uses: actions/checkout@v4
+        with:
+          repository: "${{inputs.owner}}/${{inputs.repo}}"
+          ref: ${{inputs.branch}}
+          path: ImmortalWrt
+
+      - name: 复制配置文件 (Copy config)
+        run: cp -f .config feeds.conf.default diy.sh ImmortalWrt/
+
+      - name: 更新并安装 feeds (Update & install feeds)
+        working-directory: ImmortalWrt
+        run: ./scripts/feeds update -a && ./scripts/feeds install -a
+
+      - name: 修复 mac80211 allnoconfig 问题 (Fix mac80211 allnoconfig)
+        working-directory: ImmortalWrt
+        run: |
+          rm -f package/kernel/mac80211/patches/build/002-change_allconfig.patch
+          echo "Removed 002-change_allconfig.patch"
+
+      - name: 再次复制配置文件 (Copy config again)
+        run: cp -f .config feeds.conf.default diy.sh ImmortalWrt/
+
+      - name: 生成配置 (Generate config)
+        working-directory: ImmortalWrt
+        run: make defconfig
+
+      - name: 下载源码 (Download sources)
+        working-directory: ImmortalWrt
+        run: make download -j$(nproc)
+
+      - name: 编译 tools (Build tools)
+        working-directory: ImmortalWrt
+        run: make tools/install -j$(nproc) V=s
+
+      - name: 编译 toolchain (Build toolchain)
+        working-directory: ImmortalWrt
+        run: make toolchain/install -j$(nproc) V=s
+
+      - name: 编译 mac80211 (Build mac80211)
+        working-directory: ImmortalWrt
+        run: make package/kernel/mac80211/compile V=s
+
+      - name: 检查 autoconf.h 是否存在 (Check autoconf.h)
+        working-directory: ImmortalWrt
+        run: |
+          echo "=== Checking autoconf.h ==="
+          find build_dir -name "autoconf.h" 2>/dev/null || echo "autoconf.h NOT FOUND"
+          find staging_dir -name "autoconf.h" 2>/dev/null || echo "autoconf.h NOT FOUND in staging_dir"
+          ls -la build_dir/target-*/linux-*/mac80211-*/backports-*/include/backport/ 2>/dev/null || echo "backport/include/backport/ not found"
+
+      - name: 编译 mt76 (Build mt76)
+        working-directory: ImmortalWrt
+        run: make package/kernel/mt76/compile V=s
+
+      - name: ✅ 快速验证通过 (Quick test passed)
+        run: echo "Quick test passed! mt76 compiled successfully."
+
   build:
     if: ${{inputs.ssh == false}}
     runs-on: ubuntu-latest
