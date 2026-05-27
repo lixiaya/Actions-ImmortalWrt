@@ -106,7 +106,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ImmortalWrt-Cudy-TR3000
-          path: ImmortalWrt/bin/targets/mediatek/mt7981/
+          path: ImmortalWrt/bin/targets/mediatek/filogic/
 
   build-ssh:
     if: ${{ inputs.ssh == true }}
@@ -197,4 +197,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ImmortalWrt-Cudy-TR3000
-          path: ImmortalWrt/bin/targets/mediatek/mt7981/
+          path: ImmortalWrt/bin/targets/mediatek/filogic/
